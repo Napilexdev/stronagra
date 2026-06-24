@@ -1,0 +1,92 @@
+:root {
+  /* ---- Paleta: papier terenowy, atrament, pieczęć ---- */
+  --paper: #f3ead9;
+  --paper-deep: #e9dcc3;
+  --ink: #2b2620;
+  --ink-soft: #5b5246;
+  --seal-red: #a13c2f;
+  --trail-green: #4f6b4a;
+  --brass: #b08a4e;
+  --line: rgba(43, 38, 32, 0.18);
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-ui: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --radius: 14px;
+  --shadow-paper: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 8px 24px rgba(43, 38, 32, 0.12);
+
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(176, 138, 78, 0.08), transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba(79, 107, 74, 0.07), transparent 50%);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Tekstura papieru — subtelny szum przez powtarzalny SVG */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.16  0 0 0 0 0.14  0 0 0 0 0.11  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 0;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0;
+  color: var(--ink);
+}
+
+p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+button {
+  font-family: var(--font-ui);
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--seal-red);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--trail-green);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

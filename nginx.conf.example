@@ -1,0 +1,41 @@
+# Przykładowa konfiguracja nginx dla "Szlak Miejski"
+# Podmień: twoja-domena.pl, ścieżkę root, oraz dodaj SSL (certbot)
+#
+# Instalacja certyfikatu (po skonfigurowaniu DNS na ten serwer):
+#   sudo certbot --nginx -d twoja-domena.pl -d www.twoja-domena.pl
+
+server {
+    listen 80;
+    server_name twoja-domena.pl www.twoja-domena.pl;
+
+    root /var/www/szlak-miejski/dist;
+    index index.html;
+
+    # Gzip dla szybszego ładowania na słabszym LTE w terenie
+    gzip on;
+    gzip_types text/css application/javascript application/json image/svg+xml;
+    gzip_min_length 1024;
+
+    # --- Pliki wideo: agresywny cache, bo raz wgrane się nie zmieniają ---
+    location /videos/ {
+        add_header Cache-Control "public, max-age=2592000, immutable";
+        # range requests pozwalaja na "przewijanie" wideo na telefonie
+        add_header Accept-Ranges bytes;
+    }
+
+    # --- Statyczne assety z hashem w nazwie (JS/CSS po buildzie) ---
+    location ~* \.(?:js|css|woff2?|svg|png|jpg)$ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        try_files $uri =404;
+    }
+
+    # --- SPA fallback: KLUCZOWE dla React Router ---
+    # Każdy adres typu /zadanie/3 musi serwować index.html,
+    # a routing przejmuje React po stronie przeglądarki.
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Limit wielkości uploadu nieistotny tutaj (brak uploadu od usera),
+    # ale gdyby pliki wideo były duże, zwiększ to dla samego siebie przy wgrywaniu przez scp/sftp — nie dotyczy nginx.
+}
